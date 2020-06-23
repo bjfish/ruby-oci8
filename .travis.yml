@@ -33,6 +33,9 @@ script:
 language: ruby
 rvm:
   - 2.5.1
+  - 2.6.6
+  - truffleruby-head
+  - truffleruby
 
 notifications:
     email: false
