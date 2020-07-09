@@ -155,7 +155,16 @@ when /darwin/
 else
   plthook_src = "plthook_elf.c"
 end
-if xsystem(cc_command("").gsub(CONFTEST_C, File.dirname(__FILE__) + "/" + plthook_src))
+puts "BEFORE"
+system "ls #{File.dirname(__FILE__)}"
+command = cc_command("").gsub(CONFTEST_C, File.dirname(__FILE__) + "/" + plthook_src)
+conftest_o = CONFTEST_C.gsub(/\.c$/, '.' + RbConfig::CONFIG["OBJEXT"])
+command = command.gsub(conftest_o, plthook_src.gsub(/\.c$/, '.' + RbConfig::CONFIG["OBJEXT"])) if command.include?('-o')
+puts "COMMAND: #{command.inspect}"
+if xsystem(command)
+puts "AFTER"
+system "ls #{File.dirname(__FILE__)}"
+
   File.delete(plthook_src.gsub(/\.c$/, '.' + RbConfig::CONFIG["OBJEXT"]))
   puts plthook_src
   $objs << plthook_src.gsub(/\.c$/, '.o')
