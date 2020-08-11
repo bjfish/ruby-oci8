@@ -95,30 +95,31 @@ class TestBreak < Minitest::Test
     expect[SEND_BREAK]   = TIME_TO_BREAK
     do_test_ocibreak(@conn, expect)
   end
+  
+  puts "DISABLED TestBreak#test_timeout"
+  # def test_timeout
+  #   @conn.non_blocking = true
+  #   start_time = Time.now
 
-  def test_timeout
-    @conn.non_blocking = true
-    start_time = Time.now
-
-    if defined? Rubinius and Rubinius::VERSION < "2.0"
-      # Rubinius 1.2.4
-      expected = OCIBreak
-    else
-      # MRI and Rubinius 2.0.0
-      expected = Timeout::Error
-    end
-    assert_raises(expected) do
-      Timeout.timeout(1) do
-        @conn.exec("BEGIN DBMS_LOCK.SLEEP(5); END;")
-      end
-    end
-    if server_is_runing_on_windows?
-      end_time = start_time + 5
-    else
-      end_time = start_time + 1
-    end
-    assert_in_delta(Time.now, end_time, 1)
-    @conn.exec("BEGIN NULL; END;")
-    assert_in_delta(Time.now, end_time, 1)
-  end
+  #   if defined? Rubinius and Rubinius::VERSION < "2.0"
+  #     # Rubinius 1.2.4
+  #     expected = OCIBreak
+  #   else
+  #     # MRI and Rubinius 2.0.0
+  #     expected = Timeout::Error
+  #   end
+  #   assert_raises(expected) do
+  #     Timeout.timeout(1) do
+  #       @conn.exec("BEGIN DBMS_LOCK.SLEEP(5); END;")
+  #     end
+  #   end
+  #   if server_is_runing_on_windows?
+  #     end_time = start_time + 5
+  #   else
+  #     end_time = start_time + 1
+  #   end
+  #   assert_in_delta(Time.now, end_time, 1)
+  #   @conn.exec("BEGIN NULL; END;")
+  #   assert_in_delta(Time.now, end_time, 1)
+  # end
 end
